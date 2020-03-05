@@ -148,26 +148,33 @@ RET_CODE conn::write_srv()
     }
 }
 //把服务器读入m_srv_buf的信息写入客户端的
-RET_CODE write_clt(){
+RET_CODE conn::write_clt()
+{
     int bytes_write = 0;
-    while( true ){
-        if( m_srv_read_idx <= m_srv_write_idx){
-            m_clt_read_idx = 0;
-            m_clt_write_idx = 0;
+    while( true )
+    {
+        if( m_srv_read_idx <= m_srv_write_idx )
+        {
+            m_srv_read_idx = 0;
+            m_srv_write_idx = 0;
             return BUFFER_EMPTY;
         }
-        bytes_write=send( m_cltfd ,m_srv_buf + m_srv_write_idx, m_srv_read_idx - m_srv_write_idx ,0);
-        if(bytes_write==-1){
-            if(errno == EAGAIN || errno == EWOULDBLOCK){
+
+        bytes_write = send( m_cltfd, m_srv_buf + m_srv_write_idx, m_srv_read_idx - m_srv_write_idx, 0 );
+        if ( bytes_write == -1 )
+        {
+            if( errno == EAGAIN || errno == EWOULDBLOCK )
+            {
                 return TRY_AGAIN;
             }
             log( LOG_ERR, __FILE__, __LINE__, "write client socket failed, %s", strerror( errno ) );
             return IOERR;
         }
-        //0表示连接终止
-        else if(bytes_write == 0){
+        else if ( bytes_write == 0 )
+        {
             return CLOSED;
         }
+
         m_srv_write_idx += bytes_write;
     }
 }
