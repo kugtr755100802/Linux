@@ -191,7 +191,7 @@ int main( int argc, char* argv[] )
             memcpy( tmp_host.m_hostname, tmp3, strlen( tmp3 ) );
             balance_srv.push_back( tmp_host );
             //打印一下Listen的内容
-            log(LOG_ERR ,__FILE__, __LINE__ ,"Listen host is %s ",tmp3);
+            log(LOG_INFO ,__FILE__, __LINE__ ,"Listen host is %s ",tmp3);
             memset( tmp_host.m_hostname, '\0', 1024 );
         }
         tmp = tmp2;
